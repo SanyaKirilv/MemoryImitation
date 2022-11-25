@@ -5,67 +5,57 @@ class Computer:
     def __init__(self, memory_size):
         self.memory_size = memory_size
         self.memory = Memory(memory_size, 16)
-        self.applications = []
+        self.apps = []
         self.log = []
         self.information = ""
 
-    def display_applications_information(self): #Получить информацию о приложениях и их сегментах
-        self.information += self.memory.get_list_of_using_segments()
-    
-    def display_all_information(self): #Получить информацию о всех сегментах
-        self.information += self.memory.get_list_of_all_segments()
+    def info(self):
+        self.information += self.memory.using_cells()
+        self.information += self.memory.all_cells()
 
-    def find_application(self, name): #Найти приложение
-        for app in self.applications:
-            if app.name == name: 
-                return True, app
+    def find(self, name):
+        for app in self.apps:
+            if app.name == name: return True, app
         return False, None
 
-    def install_application(self, name, req_memory): #Установить приложение
-        if not self.find_application(name)[0]:
-            self.applications.append(Application(name, req_memory, False))
-            self.log.append(f"{name} was installed!\r\n")
+    def install(self, name, req_memory):
+        if not self.find(name)[0]:
+            self.apps.append(Application(name, req_memory, False))
+            self.log.append(f"{name} установлено!\r\n")
         else: 
-            self.log.append(f"Attention! {name} is already installed.\r\n")
+            self.log.append(f"{name} уже установлено.\r\n")
 
-    def delete_application(self, name): #Удлаить приложение по названию
-        application = self.find_application(name)
-        if application[0]:
-            self.close_application(name)
-            self.applications.remove(application[1])
-            #self.optimize_memory()
-            self.log.append(f"{name} was deleted!\r\n")
+    def delete(self, name):
+        app = self.find(name)
+        if app[0]:
+            self.close(name)
+            self.apps.remove(app[1])
+            self.log.append(f"{name} удалено!\r\n")
         else:
-            self.log.append(f"Attention! {name} don`t be found.\r\n")
+            self.log.append(f"{name} не найдено.\r\n")
 
-    def close_application(self, name): #Закрыть приложение по назваению
-        application = self.find_application(name)
+    def close(self, name):
+        application = self.find(name)
         if application[0]:
-            self.memory.clear_application_memory(application[1], self.log)
+            self.memory.clear_memory(application[1], self.log)
         else:
-            self.log.append(f"Attention! {name} don`t be found.\r\n")
+            self.log.append(f"{name} не найдено.\r\n")
 
-    def close_all_applications(self): #Закрыть все приложения
-        running_applications = self.memory.get_list_of_running_applications()
+    def close_all_applications(self):
+        running_applications = self.memory.running_apps()
         if len(running_applications) > 0:
             for application in running_applications:
-                self.close_application(application)
-            self.log.append(f"All applications are closed.\r\n")
+                self.close(application)
+            self.log.append(f"Все приложения закрыты.\r\n")
         else:
-            self.log.append(f"Attention! All applications is already closed.\r\n")
+            self.log.append(f"Все приложения уже закрыты.\r\n")
 
-    def run_application(self, name): #Запуск приложения по названаю
-        application = self.find_application(name)
+    def run(self, name):
+        application = self.find(name)
         if application[0]:
             self.memory.use_memory(application[1], self.log)
         else:
-            self.log.append(f"Attention! {name} don`t be found.\r\n")
-
-    def optimize_memory(self): #Оптимизация памяти
-        running_applications = self.memory.get_list_of_running_applications()
-        self.close_all_applications()
-        for application in running_applications:
-            self.run_application(application)
+            self.log.append(f"{name} не найдено.\r\n")
 
     def get_log_information(self):
         data = ""

@@ -1,26 +1,17 @@
 from Computer import *
 
-laptop = Computer(128)
+pc = Computer(256)
 
-laptop.install_application("VS Code", 16)
-laptop.install_application("Word", 32)
-laptop.install_application("Google Chrome", 64)
+pc.install("Paint", 16)
+pc.install("PowerPoint", 42)
+pc.install("MS Edge", 32)
 
-laptop.run_application("Word")
-laptop.run_application("VS Code")
-laptop.run_application("Word")
+pc.run("Paint")
+pc.run("PowerPoint")
 
-laptop.delete_application("Word")
-laptop.run_application("Google Chrome")
+pc.delete("Paint")
+pc.run("MS Edge")
 
-laptop.display_applications_information()
-laptop.display_all_information()
-print(laptop.get_log_information())
-print(laptop.information)
-
-laptop.optimize_memory()
-
-laptop.display_applications_information()
-laptop.display_all_information()
-print(laptop.get_log_information())
-print(laptop.information)
+pc.info()
+print(pc.get_log_information())
+print(pc.information)
